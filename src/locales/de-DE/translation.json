@@ -1,0 +1,10 @@
+{
+  "global": {
+    "title": "Pasty - Cloud Clipboard",
+    "about": {
+      "link": "Über Pasty" }
+  },
+  "clipboard": {
+    "add":  "Hinzufügen"
+  }
+}

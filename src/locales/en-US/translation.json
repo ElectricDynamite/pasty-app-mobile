@@ -1,0 +1,10 @@
+{
+  "global": {
+    "title": "Pasty - The Cloud Clipboard",
+    "about": {
+      "link": "About Pasty" }
+  },
+  "clipboard": {
+    "add":  "Add"
+  }
+}
