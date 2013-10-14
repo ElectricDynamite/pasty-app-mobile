@@ -16,8 +16,11 @@
       localStorageExpirationTime: 86400000 }, function() {
         $(".i18n").i18n();
     });
-    client = pastyclient('mario.blafaselblub.net', 4444, { 'ssl': true });
-    client.getServerVersion();
+    client = pastyclient('mario.blafaselblub.net', 4444, {
+		'ssl': true,
+		'username': 'phiges',
+		'password': '' });
+    client.listItems(function(err, data) { console.dir(data); });
   });
 </script>
 </head>
