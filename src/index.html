@@ -11,34 +11,63 @@
 <script>
   $(document).ready(function() {
     $.i18n.init({ 
-      fallbackLng: 'en',
+      fallbackLng: 'en-US',
       useLocalStorage: true,
       localStorageExpirationTime: 86400000 }, function() {
         $(".i18n").i18n();
+        $("#add").i18n().button();
     });
     client = pastyclient('mario.blafaselblub.net', 4444, {
 		'ssl': true,
-		'username': 'phiges',
-		'password': '' });
-    client.listItems(function(err, data) { console.dir(data); });
+		'username': 'test2',
+		'password': 'test21234' });
+	$.mobile.loading('show');
+    client.listItems(function(err, data) {
+      if(err === null) {
+        var parent = $("#clipboard");
+        for(var i = 0; i < data.length; i++) {
+          var node = document.createElement('li');
+          var nodePopup = document.createElement('div');
+          nodePopup.setAttribute('data-role', 'popup');
+          nodePopup.setAttribute('id',data[i]._id);
+          nodePopup.setAttribute('class', 'ui-content');
+          nodePopup.innerHTML = '\
+            <a href="#" data-rel="back" data-role="button" data-theme="a" \
+              data-icon="delete" data-iconpos="notext" class="ui-btn-left">Close</a> \
+            <textarea>'+data[i].item+'</textarea>';
+          document.body.appendChild(nodePopup);
+          $("#"+data[i]._id).popup();
+          $("#"+data[i]._id).children('a').button();
+          node.innerHTML = '<a class="copy" href="#" data-ciid="'+data[i]._id+'">'+data[i].item+'</a><a class="delete" href="#" data-role="button" data-icon="delete" data-ciid="'+data[i]._id+'">Test</a>'
+          clipboard.appendChild(node);
+        }
+        parent.listview('refresh');
+        $(".copy").click(function(event) {
+          event.preventDefault();
+          $("#"+$(this).attr('data-ciid')).popup('open');
+        });
+        $(".delete").click(function(event) {
+          event.preventDefault();
+          alert("would delete "+$(this).attr('data-ciid'));
+        });
+        $.mobile.loading('hide');
+      } else {
+        alert('Error: '+err);
+      } 
+    });
   });
 </script>
 </head>
 <body>
 <div data-role="page">
 <div data-role="header">
-  <h1 class="i18n" data-i18n="global.title">Pasty - The Cloud Clipboard</h1>
+  <h1 class="i18n" data-i18n="global.title">Pasty</h1>
 </div><!-- /header -->
 <div data-role="content">
   <p>
-    <a data-i18n="clipboard.add" href="#" data-role="button" data-icon="star">Add</a>
+    <a id="add" data-i18n="clipboard.add" href="#" data-icon="plus">Add</a>
   </p>
-  <ul data-role="listview" data-inset="true" data-filter="true">
-    <li><a href="#">Item 1</a></li>
-    <li><a href="#">Item 2</a></li>
-    <li><a href="#">Item 3</a></li>
-    <li><a href="#">Item 4</a></li>
-    <li><a href="#">Item 5</a></li>
+  <ul id="clipboard" data-role="listview" data-inset="true" data-filter="true" data-icon="edit">
   </ul>
 </div><!-- /content -->
 <div data-role="footer">
