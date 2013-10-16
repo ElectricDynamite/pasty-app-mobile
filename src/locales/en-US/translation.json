@@ -6,5 +6,8 @@
   },
   "clipboard": {
     "add":  "Add"
+  },
+  "copy_view": {
+    "description": "Select the text and copy it to your systems clipboard"
   }
 }

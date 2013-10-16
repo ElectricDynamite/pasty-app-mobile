@@ -6,5 +6,8 @@
   },
   "clipboard": {
     "add":  "Hinzufügen"
+  },
+  "copy_view": {
+    "description": "Selektiere den Text und kopiere ihn in die Zwischenablage deines Ger&auml;tes"
   }
 }
