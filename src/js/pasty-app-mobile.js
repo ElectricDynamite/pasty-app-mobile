@@ -23,7 +23,7 @@ var pastyApp = (function(){
 
   return {
     version: '0.1.0',
-    useLocalStorage: true,
+    useLocalStorage: false,
     client: null,
     setPastyClient: function(client) {
       console.log("setPastyClient(): useLocalStorage is: "+this.useLocalStorage);

@@ -20,12 +20,13 @@
     });
     //console.log(pastyApp.getPastyClient());
 	if(pastyApp.getPastyClient() === null) {
-	  $("#loginPopup").popup().popup('open');
+	  //$("#popupLogin").popup('open');
       client = pastyclient('mario.blafaselblub.net', 4444, {
 		'ssl': true,
 		'username': 'test2',
 		'password': 'test21234' });
   	  pastyApp.setPastyClient(client);
+      pastyApp.getClipboard();
   	} else {
       pastyApp.getClipboard();
   	}
@@ -39,6 +40,7 @@
 </div>
 <div data-role="content">
   <p>
+    <a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">Form</a>
     <a id="add" data-i18n="clipboard.add" href="#" data-icon="plus">Add</a>
   </p>
   <ul id="clipboard" data-role="listview" data-inset="true" data-filter="true" data-icon="edit">
@@ -47,8 +49,7 @@
 <div data-role="footer">
 <h4><a class="i18n" id="about-link" href="http://www.pastyapp.org" data-i18n="global.about.link">About Pasty</a></h4>
 </div>
-</div>
-<div id="loginPopup" data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+<div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
   <form>
     <div style="padding:10px 20px;">
       <h3>Please sign in</h3>
@@ -59,6 +60,7 @@
       <button type="submit" data-theme="b">Sign in</button>
     </div>
   </form>
+</div>
 </div>
 </body>
 </html>
