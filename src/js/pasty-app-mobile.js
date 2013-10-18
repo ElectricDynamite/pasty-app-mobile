@@ -41,6 +41,9 @@ var pastyApp = (function(){
       console.log("getPastyClient() and now it is: "+this.client);
       return this.client;
     },
+    login: function() {
+      $("#popupLogin").popup('open');
+    },
     getClipboard: function(callback) {
       callback = callback || $.noop;
       $.mobile.loading('show');
@@ -78,10 +81,10 @@ var pastyApp = (function(){
             event.preventDefault();
             self.deleteItem($(this).attr('data-ciid'));
           });
-          $.mobile.loading('hide');
         } else {
-          alert('Error: '+err.message);
+          self.errorHandler(err);
         }
+        $.mobile.loading('hide');
         callback();
       });
     },
@@ -89,6 +92,24 @@ var pastyApp = (function(){
     },
     deleteItem: function(ciid) {
       alert("deleteItem: "+ciid);
+    },
+    errorHandler: function(err) {
+      if(err === null) return; // if no error is provided, return
+      err.statusCode = err.statusCode || 500;
+      err.code = err.code || "";
+      err.message = err.message || "";
+      switch(err.code) {
+        case "UnauthorizedError":
+          //this.login();
+        default:
+          if(err.code !== "") this.displayErrorMessage(err.message);
+          break;
+      }
+      if(err.code !== "") this.displayErrorMessage(err.message);
+    },
+    displayErrorMessage: function(message) {
+        $("#popupErrorMessage").text(message);
+        $("#popupError").popup('open');
     }
   };
 }());

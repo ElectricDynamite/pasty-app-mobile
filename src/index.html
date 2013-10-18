@@ -18,18 +18,16 @@
         $(".i18n").i18n();
         $("#add").i18n().button();
     });
-    //console.log(pastyApp.getPastyClient());
-	if(pastyApp.getPastyClient() === null) {
-	  //$("#popupLogin").popup('open');
+    
+    $("#popupLoginSubmit").submit(function(event) {
+      event.preventDefault();
       client = pastyclient('mario.blafaselblub.net', 4444, {
 		'ssl': true,
 		'username': 'test2',
 		'password': 'test21234' });
   	  pastyApp.setPastyClient(client);
       pastyApp.getClipboard();
-  	} else {
-      pastyApp.getClipboard();
-  	}
+    });
   });
 </script>
 </head>
@@ -37,10 +35,10 @@
 <div data-role="page">
 <div data-role="header">
   <h1 class="i18n" data-i18n="global.title">Pasty</h1>
+  <a href="#popupLogin" data-rel="popup" data-icon="check" data-i18n="global.login" data-position-to="window" class="ui-btn-right">Login</a>
 </div>
 <div data-role="content">
   <p>
-    <a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">Form</a>
     <a id="add" data-i18n="clipboard.add" href="#" data-icon="plus">Add</a>
   </p>
   <ul id="clipboard" data-role="listview" data-inset="true" data-filter="true" data-icon="edit">
@@ -53,14 +51,40 @@
   <form>
     <div style="padding:10px 20px;">
       <h3>Please sign in</h3>
-      <label for="un" class="ui-hidden-accessible">Username:</label>
-      <input type="text" name="user" id="un" value="" placeholder="username" data-theme="a" />
-      <label for="pw" class="ui-hidden-accessible">Password:</label>
-      <input type="password" name="pass" id="pw" value="" placeholder="password" data-theme="a" />
-      <button type="submit" data-theme="b">Sign in</button>
+      <label for="username" class="ui-hidden-accessible">Username:</label>
+      <input type="text" name="username" id="username" value="" placeholder="username" data-theme="a" />
+      <label for="password" class="ui-hidden-accessible">Password:</label>
+      <input type="password" name="password" id="password" value="" placeholder="password" data-theme="a" />
+      <button id="popupLoginSubmit" type="submit" data-theme="b">Sign in</button>
     </div>
   </form>
 </div>
+<div data-role="popup" id="popupError" data-theme="e" class="ui-corner-all ui-content">
+  <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-left">Close</a>
+  <h3 data-i18n="global.error.title">Error</h1>
+  <p id="popupErrorMessage"></p>
 </div>
+</div>
+<script type="text/javascript">
+  $(":jqmData(role='page'):last").on("pageshow", function(event) {
+    $("#popupLoginSubmit").click(function(event) {
+      event.preventDefault();
+      var username = $("#username").val();
+      var password = $("#password").val();
+      client = pastyclient('mario.blafaselblub.net', 4444, {
+		'ssl': true,
+		'username': username,
+		'password': password });
+  	  pastyApp.setPastyClient(client);
+  	  $("#popupLogin").popup('close');
+      pastyApp.getClipboard();
+    });
+	if(pastyApp.getPastyClient() === null) {
+      $("#popupLogin", $(this)).popup("open");
+  	} else {
+      pastyApp.getClipboard();
+  	}
+});
+</script>
 </body>
 </html>
