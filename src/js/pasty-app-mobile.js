@@ -89,6 +89,9 @@ var pastyApp = (function(){
       this.client.listItems(function(err, data) {
         if(err === null) {
           var parent = $("#clipboard");
+          $(".copy").each(function(index) {
+            $("#"+$(this).attr('data-ciid')).remove();
+          });
           parent.empty();
           for(var i = 0; i < data.length; i++) {
             var node = document.createElement('li');
