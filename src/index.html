@@ -9,33 +9,19 @@
 <script src="js/i18next-1.7.1.min.js"></script>    
 <script src="js/pastyclient-browser.js"></script>
 <script src="js/pasty-app-mobile.js"></script>
-<script>
-  $(document).ready(function() {
-    $.i18n.init({ 
-      fallbackLng: 'en-US',
-      useLocalStorage: true,
-      localStorageExpirationTime: 86400000 }, function() {
-        $(".i18n").i18n();
-        $("#add").i18n().button();
-    });
-    
-    $("#popupLoginSubmit").submit(function(event) {
-      event.preventDefault();
-      client = pastyclient('mario.blafaselblub.net', 4444, {
-		'ssl': true,
-		'username': 'test2',
-		'password': 'test21234' });
-  	  pastyApp.setPastyClient(client);
-      pastyApp.getClipboard();
-    });
-  });
-</script>
+<style type="text/css">
+#loginFailedMessage {
+  font-weight: bold;
+  color: red;
+}
+
+</style>
 </head>
 <body>
 <div data-role="page">
 <div data-role="header">
   <h1 class="i18n" data-i18n="global.title">Pasty</h1>
-  <a href="#popupLogin" data-rel="popup" data-icon="check" data-i18n="global.login" data-position-to="window" class="ui-btn-right">Login</a>
+  <a id="headerLoginButton" href="#popupLogin" data-rel="popup" data-icon="check" data-i18n="global.login" data-position-to="window" class="ui-btn-right">Login</a>
 </div>
 <div data-role="content">
   <p>
@@ -47,15 +33,16 @@
 <div data-role="footer">
 <h4><a class="i18n" id="about-link" href="http://www.pastyapp.org" data-i18n="global.about.link">About Pasty</a></h4>
 </div>
-<div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+<div data-role="popup" data-dismissible="false" data-overlay-theme="a" data-transition="pop" id="popupLogin" data-theme="a" class="ui-corner-all">
   <form>
     <div style="padding:10px 20px;">
-      <h3>Please sign in</h3>
-      <label for="username" class="ui-hidden-accessible">Username:</label>
-      <input type="text" name="username" id="username" value="" placeholder="username" data-theme="a" />
-      <label for="password" class="ui-hidden-accessible">Password:</label>
-      <input type="password" name="password" id="password" value="" placeholder="password" data-theme="a" />
-      <button id="popupLoginSubmit" type="submit" data-theme="b">Sign in</button>
+      <h3 class="i18n" data-i18n="login_view.title">Please sign in</h3>
+      <label for="username" class="ui-hidden-accessible" data-i18n="login_view.username_label">Username:</label>
+      <input type="text" name="username" id="username" value="" placeholder="username" data-i18n="[placeholder]login_view.username_label" data-theme="a" class="i18n">
+      <label for="password" class="ui-hidden-accessible" data-i18n="login_view.password_label">Password:</label>
+      <input type="password" name="password" id="password" value="" placeholder="password" data-i18n="[placeholder]login_view.password_label" data-theme="a" class="i18n">
+      <span id="loginFailedMessage"></span>
+      <button class="i18n" id="popupLoginSubmit" type="submit" data-theme="b" data-i18n="login_view.submit_label">Sign in</button>
     </div>
   </form>
 </div>
@@ -67,23 +54,33 @@
 </div>
 <script type="text/javascript">
   $(":jqmData(role='page'):last").on("pageshow", function(event) {
+    $.i18n.init({ 
+      fallbackLng: 'en-US',
+      useLocalStorage: true,
+      localStorageExpirationTime: 86400000 }, function() {
+        $(".i18n").i18n();
+        $("#add").i18n().button();
+        $("#popupLoginSubmit").i18n().button('refresh');
+    });
+    
     $("#popupLoginSubmit").click(function(event) {
       event.preventDefault();
       var username = $("#username").val();
       var password = $("#password").val();
       client = pastyclient('mario.blafaselblub.net', 4444, {
-		'ssl': true,
-		'username': username,
-		'password': password });
-  	  pastyApp.setPastyClient(client);
-  	  $("#popupLogin").popup('close');
+    'ssl': true,
+    'username': username,
+    'password': password });
+      pastyApp.setPastyClient(client);
+      $("#popupLogin").popup('close');
+      pastyApp.loggedIn(true);
       pastyApp.getClipboard();
     });
-	if(pastyApp.getPastyClient() === null) {
+  if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
       $("#popupLogin", $(this)).popup("open");
-  	} else {
+    } else {
       pastyApp.getClipboard();
-  	}
+    }
 });
 </script>
 </body>

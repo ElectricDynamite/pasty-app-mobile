@@ -1,6 +1,8 @@
 {
   "global": {
     "title": "Pasty",
+    "login": "Anmelden",
+    "logout": "Abmelden",
     "about": {
       "link": "Über Pasty" }
   },
@@ -9,5 +11,14 @@
   },
   "copy_view": {
     "description": "Selektiere den Text und kopiere ihn in die Zwischenablage deines Ger&auml;tes"
+  },
+  "login_view": {
+    "title": "Bitte melde dich an",
+    "username_label": "Benutzername",
+    "password_label": "Passwort",
+    "submit_label": "Anmelden"
+  },
+  "error": {
+    "login_failed": "Login fehlgeschlagen"
   }
 }

@@ -23,26 +23,62 @@ var pastyApp = (function(){
 
   return {
     version: '0.1.0',
-    useLocalStorage: false,
+    useLocalStorage: true,
     client: null,
+    loginSuccess: false,
     setPastyClient: function(client) {
       console.log("setPastyClient(): useLocalStorage is: "+this.useLocalStorage);
-      if(this.useLocalStorage) localStorage.setItem('pastyApp_pastyClient_target', JSON.stringify(client.target));
       this.client = client;
+      if(this.useLocalStorage) this.saveToLocalStorage();
     },
     getPastyClient: function() {
       console.log("getPastyClient(): client is: "+this.client);
       if(this.client === null && this.useLocalStorage === true) {
-        var restoredTarget = JSON.parse(localStorage.getItem('pastyApp_pastyClient_target'));
-        if(restoredTarget !== null) {
-          this.client = new PastyClient(restoredTarget);
-        }
+        this.restoreFromLocalStorage();
       }
       console.log("getPastyClient() and now it is: "+this.client);
       return this.client;
     },
-    login: function() {
+    saveToLocalStorage: function() {
+      if(this.useLocalStorage !== true) return;
+      if(this.client !== null) {
+        localStorage.setItem('pastyApp_pastyClient_target', JSON.stringify(this.client.target));
+        localStorage.setItem('pastyApp_loginSuccess', this.loginSuccess);
+      }
+    },
+    restoreFromLocalStorage: function() {
+       var restoredTarget = JSON.parse(localStorage.getItem('pastyApp_pastyClient_target'));
+       var loginSuccess =localStorage.getItem('pastyApp_loginSuccess');
+       loginSuccess = (loginSuccess == "true") ? true : false;
+       if(restoredTarget !== null && loginSuccess == true) {
+          this.client = new PastyClient(restoredTarget);
+          this.loggedIn(loginSuccess);
+       }
+    },
+    login: function(lastWasBad) {
+      if(lastWasBad) {
+        $("#loginFailedMessage").text($.t('error.login_failed'));
+      }
       $("#popupLogin").popup('open');
+    },
+    logout: function() {
+      $("#clipboard").empty();
+      this.loggedIn(false);
+      
+    },
+    loggedIn: function(bool) {
+      if(bool === undefined) return this.loginSuccess;
+      if(typeof(bool) == "boolean") {
+        this.loginSuccess = bool;
+        if(bool === true) {
+          $("#headerLoginButton").attr('href', "javascript:pastyApp.logout()");
+          $("#headerLoginButton").find('.ui-btn-text').text($.t('global.logout'));
+        } else {
+          $("#headerLoginButton").attr('href', "#popupLogin");
+          $("#headerLoginButton").find('.ui-btn-text').text($.t('global.login'));
+        }
+        this.saveToLocalStorage();
+      }
     },
     getClipboard: function(callback) {
       callback = callback || $.noop;
@@ -51,6 +87,7 @@ var pastyApp = (function(){
       this.client.listItems(function(err, data) {
         if(err === null) {
           var parent = $("#clipboard");
+          parent.empty();
           for(var i = 0; i < data.length; i++) {
             var node = document.createElement('li');
             var nodePopup = document.createElement('div');
@@ -85,6 +122,7 @@ var pastyApp = (function(){
           self.errorHandler(err);
         }
         $.mobile.loading('hide');
+        self.saveToLocalStorage();
         callback();
       });
     },
@@ -100,7 +138,9 @@ var pastyApp = (function(){
       err.message = err.message || "";
       switch(err.code) {
         case "UnauthorizedError":
-          //this.login();
+          this.loggedIn(false);
+          this.login(true);
+          break;
         default:
           if(err.code !== "") this.displayErrorMessage(err.message);
           break;

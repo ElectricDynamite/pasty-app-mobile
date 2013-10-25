@@ -1,6 +1,8 @@
 {
   "global": {
     "title": "Pasty",
+    "login": "Login",
+    "logout": "Logout",
     "about": {
       "link": "About Pasty" }
   },
@@ -9,5 +11,14 @@
   },
   "copy_view": {
     "description": "Select the text and copy it to your systems clipboard"
+  },
+  "login_view": {
+    "title": "Please sign in",
+    "username_label": "username",
+    "password_label": "password",
+    "submit_label": "Sign in"
+  },
+  "error": {
+    "login_failed": "Login failed"
   }
 }
