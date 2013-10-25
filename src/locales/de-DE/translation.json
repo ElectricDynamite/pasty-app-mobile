@@ -18,6 +18,11 @@
     "password_label": "Passwort",
     "submit_label": "Anmelden"
   },
+  "add_view": {
+    "title": "Eintrag hinzufügen",
+    "placeholder": "Hier einfügen",
+    "submit_label": "Speichern"
+  },
   "delete_confirm_view": {
     "title": "Sicher?",
     "message": "Bist du sicher, dass du diesen Eintrag löschen möchtest?",

@@ -130,6 +130,16 @@ var pastyApp = (function(){
       });
     },
     addItem: function(item) {
+      var self = this;
+      if(this.client != null) {
+        this.client.addItem(item, function(err, itemid) {
+          if(err === null) {
+            self.getClipboard();
+          } else {
+            self.errorHandler(err);
+          }
+        });
+      }
     },
     confirmDelete: function(ciid) {
       $("#popupDeleteConfirmCIID").val(ciid);
