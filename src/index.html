@@ -20,7 +20,7 @@
         $(".i18n-button").i18n().button('refresh');
         
         if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
-          $("#popupLogin", $(this)).popup("open");
+          $("#popupLogin").popup("open");
         } else {
           pastyApp.getClipboard();
         }
