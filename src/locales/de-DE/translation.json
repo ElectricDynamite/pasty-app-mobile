@@ -22,7 +22,7 @@
     "title": "Sicher?",
     "message": "Bist du sicher, dass du diesen Eintrag löschen möchtest?",
     "button_yes": "Absolut",
-    "button_no": "Nö, doch nicht"
+    "button_no": "Doch nicht"
   },
   "error": {
     "login_failed": "Login fehlgeschlagen"
