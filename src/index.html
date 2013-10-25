@@ -9,6 +9,24 @@
 <script src="js/i18next-1.7.1.min.js"></script>    
 <script src="js/pastyclient-browser.js"></script>
 <script src="js/pasty-app-mobile.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $.i18n.init({ 
+      fallbackLng: 'en-US',
+      useLocalStorage: false,
+      localStorageExpirationTime: 86400000 }, function() {
+        $(".i18n").i18n();
+        $("#add").i18n().button();
+        $(".i18n-button").i18n().button('refresh');
+        
+        if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
+          $("#popupLogin", $(this)).popup("open");
+        } else {
+          pastyApp.getClipboard();
+        }
+    });
+  });
+</script>
 <style type="text/css">
 #loginFailedMessage {
   font-weight: bold;
@@ -42,7 +60,7 @@
       <label for="password" class="ui-hidden-accessible" data-i18n="login_view.password_label">Password:</label>
       <input type="password" name="password" id="password" value="" placeholder="password" data-i18n="[placeholder]login_view.password_label" data-theme="a" class="i18n">
       <span id="loginFailedMessage"></span>
-      <button class="i18n" id="popupLoginSubmit" type="submit" data-theme="b" data-i18n="login_view.submit_label">Sign in</button>
+      <button class="i18n-button" id="popupLoginSubmit" type="submit" data-theme="b" data-i18n="login_view.submit_label">Sign in</button>
     </div>
   </form>
 </div>
@@ -51,17 +69,17 @@
   <h3 data-i18n="global.error.title">Error</h1>
   <p id="popupErrorMessage"></p>
 </div>
+<div data-role="popup" data-overlay-theme="a" data-transition="pop" id="popupDeleteConfirm" data-theme="a" class="ui-corner-all ui-content">
+  <h3 data-i18n="delete_confirm_view.title" class="i18n">Sure?</h1>
+  <p id="popupDeleteConfirmMessage" data-i18n="delete_confirm_view.message" class="i18n">Are you sure that you want to delete this item?</p>
+  <input type="hidden" id="popupDeleteConfirmCIID" value="">
+  <p id="popupDeleteConfirmItem"></p>
+  <button id="popupDeleteConfirmButtonNo" data-theme="b" data-inline="true" data-icon="back" data-role="button" data-i18n="delete_confirm_view.button_no" class="i18n-button">No, don't delete</button>
+  <button id="popupDeleteConfirmButtonYes" data-theme="e" data-inline="true" data-icon="delete" data-role="button" data-i18n="delete_confirm_view.button_yes" class="i18n-button">Yes</button>
+</div>
 </div>
 <script type="text/javascript">
   $(":jqmData(role='page'):last").on("pageshow", function(event) {
-    $.i18n.init({ 
-      fallbackLng: 'en-US',
-      useLocalStorage: true,
-      localStorageExpirationTime: 86400000 }, function() {
-        $(".i18n").i18n();
-        $("#add").i18n().button();
-        $("#popupLoginSubmit").i18n().button('refresh');
-    });
     
     $("#popupLoginSubmit").click(function(event) {
       event.preventDefault();
@@ -76,11 +94,16 @@
       pastyApp.loggedIn(true);
       pastyApp.getClipboard();
     });
-  if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
-      $("#popupLogin", $(this)).popup("open");
-    } else {
-      pastyApp.getClipboard();
-    }
+    
+  $("#popupDeleteConfirmButtonNo").click(function(event) {
+    $("#popupDeleteConfirm").popup('close')
+  });
+  
+  $("#popupDeleteConfirmButtonYes").click(function(event) {
+    pastyApp.deleteItem($("#popupDeleteConfirmCIID").val());
+    $("#popupDeleteConfirm").popup('close')
+  });
+    
 });
 </script>
 </body>

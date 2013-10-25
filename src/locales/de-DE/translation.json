@@ -18,6 +18,12 @@
     "password_label": "Passwort",
     "submit_label": "Anmelden"
   },
+  "delete_confirm_view": {
+    "title": "Sicher?",
+    "message": "Bist du sicher, dass du diesen Eintrag löschen möchtest?",
+    "button_yes": "Absolut",
+    "button_no": "Nö, doch nicht"
+  },
   "error": {
     "login_failed": "Login fehlgeschlagen"
   }

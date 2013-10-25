@@ -63,6 +63,8 @@ var pastyApp = (function(){
     },
     logout: function() {
       $("#clipboard").empty();
+      $("#username").val("");
+      $("#password").val("");
       this.loggedIn(false);
       
     },
@@ -94,6 +96,7 @@ var pastyApp = (function(){
             nodePopup.setAttribute('data-role', 'popup');
             nodePopup.setAttribute('data-theme', 'e');
             nodePopup.setAttribute('data-transition', 'pop');
+            nodePopup.setAttribute('data-overlay-theme', 'a');
             nodePopup.setAttribute('id',data[i]._id);
             nodePopup.setAttribute('class', 'ui-content');
             nodePopup.innerHTML = '\
@@ -104,8 +107,8 @@ var pastyApp = (function(){
             document.body.appendChild(nodePopup);
             $("#"+data[i]._id).popup();
             $("#"+data[i]._id).children('a').button();
-            node.innerHTML = '<a class="copy" href="#" data-ciid="'+data[i]._id+'">\
-              '+data[i].item+'</a><a class="delete" href="#" data-role="button" data-icon="delete"\
+            node.innerHTML = '<a class="copy" href="#" id="item-'+data[i]._id+'" data-ciid="'+data[i]._id+'">\
+              '+data[i].item+'</a><a class="delete" href="#" data-role="button" data-icon="minus"\
                data-iconpos="notext" data-ciid="'+data[i]._id+'">Delete</a>'
             clipboard.appendChild(node);
           }
@@ -116,7 +119,7 @@ var pastyApp = (function(){
           });
           $(".delete").click(function(event) {
             event.preventDefault();
-            self.deleteItem($(this).attr('data-ciid'));
+            self.confirmDelete($(this).attr('data-ciid'));
           });
         } else {
           self.errorHandler(err);
@@ -128,8 +131,22 @@ var pastyApp = (function(){
     },
     addItem: function(item) {
     },
+    confirmDelete: function(ciid) {
+      $("#popupDeleteConfirmCIID").val(ciid);
+      $("#popupDeleteConfirmItem").text($("#item-"+ciid).text());
+      $("#popupDeleteConfirm").popup('open');
+    },
     deleteItem: function(ciid) {
-      alert("deleteItem: "+ciid);
+      var self = this;
+      if(this.client != null) {
+        this.client.deleteItem(ciid, function(err, success) {
+          if(err === null) {
+            self.getClipboard();
+          } else {
+            self.errorHandler(err);
+          }
+        });
+      }
     },
     errorHandler: function(err) {
       if(err === null) return; // if no error is provided, return
