@@ -75,9 +75,11 @@ var pastyApp = (function(){
         if(bool === true) {
           $("#headerLoginButton").attr('href', "javascript:pastyApp.logout()");
           $("#headerLoginButton").find('.ui-btn-text').text($.t('global.logout'));
+          $("#uiClipboard").fadeIn();
         } else {
           $("#headerLoginButton").attr('href', "#popupLogin");
           $("#headerLoginButton").find('.ui-btn-text').text($.t('global.login'));
+          $("#uiClipboard").fadeOut();
         }
         this.saveToLocalStorage();
       }

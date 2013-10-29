@@ -21,7 +21,7 @@
         $(".i18n").i18n();
         $("#add").i18n().button();
         $(".i18n-button").i18n().button('refresh');
-        
+
         if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
           $("#popupLogin").popup("open");
         } else {
@@ -44,11 +44,13 @@
   <a id="headerLoginButton" href="#popupLogin" data-theme="b" data-rel="popup" data-icon="check" data-i18n="global.login" data-position-to="window" class="ui-btn-right">Login</a>
 </div>
 <div data-role="content">
-  <p>
-    <a id="add" data-i18n="clipboard.add" data-rel="popup" href="#popupAddItem" data-icon="plus">Add</a>
-  </p>
-  <ul id="clipboard" data-role="listview" data-inset="true" data-filter="true" data-icon="edit">
-  </ul>
+  <div id="uiClipboard" style="display:none">
+    <p>
+      <a id="add" data-i18n="clipboard.add" data-rel="popup" href="#popupAddItem" data-icon="plus">Add</a>
+    </p>
+    <ul id="clipboard" data-role="listview" data-inset="true" data-filter="true" data-icon="edit">
+    </ul>
+  </div>
 </div>
 <div data-role="footer">
 <h4><a class="i18n" id="linkDesktop" href="#" data-i18n="global.desktop_site">Desktop Site</a></h4>
@@ -107,22 +109,22 @@
       pastyApp.loggedIn(true);
       pastyApp.getClipboard();
     });
-    
+
   $("#popupAddItemSubmit").click(function(event) {
     event.preventDefault();
     pastyApp.addItem($("#newItem").val());
     $("#popupAddItem").popup('close');
   });
-    
+
   $("#popupDeleteConfirmButtonNo").click(function(event) {
     $("#popupDeleteConfirm").popup('close');
   });
-  
+
   $("#popupDeleteConfirmButtonYes").click(function(event) {
     pastyApp.deleteItem($("#popupDeleteConfirmCIID").val());
     $("#popupDeleteConfirm").popup('close');
   });
-    
+
 });
 </script>
 </body>
