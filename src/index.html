@@ -20,6 +20,8 @@
       localStorageExpirationTime: 86400000 }, function() {
         $(".i18n").i18n();
         $("#add").i18n().button();
+        $("#buttonLoginMain").i18n().button();
+         $("#headerLoginButton").find('.ui-btn-text').text($.t($("#headerLoginButton").attr('data-i18n')));
         $(".i18n-button").i18n().button('refresh');
 
         if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
@@ -50,6 +52,9 @@
     </p>
     <ul id="clipboard" data-role="listview" data-inset="true" data-filter="true" data-icon="edit">
     </ul>
+  </div>
+  <div id="uiNotLoggedIn">
+    <a id="buttonLoginMain" data-theme="b" data-i18n="global.login" data-rel="popup" href="#popupLogin" data-icon="check">Login</a>
   </div>
 </div>
 <div data-role="footer">
@@ -106,7 +111,6 @@
     'password': password });
       pastyApp.setPastyClient(client);
       $("#popupLogin").popup('close');
-      pastyApp.loggedIn(true);
       pastyApp.getClipboard();
     });
 

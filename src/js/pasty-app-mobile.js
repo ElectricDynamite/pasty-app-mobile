@@ -27,16 +27,13 @@ var pastyApp = (function(){
     client: null,
     loginSuccess: false,
     setPastyClient: function(client) {
-      console.log("setPastyClient(): useLocalStorage is: "+this.useLocalStorage);
       this.client = client;
       if(this.useLocalStorage) this.saveToLocalStorage();
     },
     getPastyClient: function() {
-      console.log("getPastyClient(): client is: "+this.client);
       if(this.client === null && this.useLocalStorage === true) {
         this.restoreFromLocalStorage();
       }
-      console.log("getPastyClient() and now it is: "+this.client);
       return this.client;
     },
     saveToLocalStorage: function() {
@@ -62,9 +59,6 @@ var pastyApp = (function(){
       $("#popupLogin").popup('open');
     },
     logout: function() {
-      $("#clipboard").empty();
-      $("#username").val("");
-      $("#password").val("");
       this.loggedIn(false);
       
     },
@@ -75,11 +69,16 @@ var pastyApp = (function(){
         if(bool === true) {
           $("#headerLoginButton").attr('href', "javascript:pastyApp.logout()");
           $("#headerLoginButton").find('.ui-btn-text').text($.t('global.logout'));
-          $("#uiClipboard").fadeIn();
+          $("#uiNotLoggedIn").fadeOut({ 'complete': function() { $("#uiClipboard").fadeIn(); } });
         } else {
           $("#headerLoginButton").attr('href', "#popupLogin");
           $("#headerLoginButton").find('.ui-btn-text').text($.t('global.login'));
-          $("#uiClipboard").fadeOut();
+          $("#uiClipboard").fadeOut({ 'complete': function() { 
+            $("#uiNotLoggedIn").fadeIn(); 
+            $("#clipboard").empty();
+            $("#username").val("");
+            $("#password").val("");
+          }});
         }
         this.saveToLocalStorage();
       }
@@ -90,6 +89,7 @@ var pastyApp = (function(){
       var self = this;
       this.client.listItems(function(err, data) {
         if(err === null) {
+          if(self.loggedIn() === false) self.loggedIn(true);
           var parent = $("#clipboard");
           $(".copy").each(function(index) {
             $("#"+$(this).attr('data-ciid')).remove();
