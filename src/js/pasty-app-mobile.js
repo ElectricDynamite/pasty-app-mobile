@@ -26,6 +26,7 @@ var pastyApp = (function(){
     useLocalStorage: true,
     client: null,
     loginSuccess: false,
+    loginPopupOpenState: false,
     setPastyClient: function(client) {
       this.client = client;
       if(this.useLocalStorage) this.saveToLocalStorage();
@@ -81,6 +82,15 @@ var pastyApp = (function(){
           }});
         }
         this.saveToLocalStorage();
+      }
+    },
+    loginPopupOpen: function(bool) {
+      if(bool === undefined) return this.loginSuccess;
+      if(typeof(bool) == "boolean") {
+        this.popupLoginOpenState = bool;
+        if(bool === true) {
+        } else {
+        }
       }
     },
     getClipboard: function(callback) {
@@ -170,7 +180,7 @@ var pastyApp = (function(){
       err.message = err.message || "";
       switch(err.code) {
         case "UnauthorizedError":
-          this.loggedIn(false);
+          this.logout();
           this.login(true);
           break;
         default:

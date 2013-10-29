@@ -113,23 +113,31 @@
       $("#popupLogin").popup('close');
       pastyApp.getClipboard();
     });
+    
+    $("#popupLogin").bind({
+      popupafteropen: function(event, ui) {
+        pastyApp.loginPopupOpen(true);
+      },
+      popupafterclose: function(event, ui) {
+        pastyApp.loginPopupOpen(false);
+      }
+    });
+  
+    $("#popupAddItemSubmit").click(function(event) {
+      event.preventDefault();
+      pastyApp.addItem($("#newItem").val());
+      $("#popupAddItem").popup('close');
+    });
 
-  $("#popupAddItemSubmit").click(function(event) {
-    event.preventDefault();
-    pastyApp.addItem($("#newItem").val());
-    $("#popupAddItem").popup('close');
+    $("#popupDeleteConfirmButtonNo").click(function(event) {
+      $("#popupDeleteConfirm").popup('close');
+    });
+
+    $("#popupDeleteConfirmButtonYes").click(function(event) {
+      pastyApp.deleteItem($("#popupDeleteConfirmCIID").val());
+      $("#popupDeleteConfirm").popup('close');
+    });
   });
-
-  $("#popupDeleteConfirmButtonNo").click(function(event) {
-    $("#popupDeleteConfirm").popup('close');
-  });
-
-  $("#popupDeleteConfirmButtonYes").click(function(event) {
-    pastyApp.deleteItem($("#popupDeleteConfirmCIID").val());
-    $("#popupDeleteConfirm").popup('close');
-  });
-
-});
 </script>
 </body>
 </html>
