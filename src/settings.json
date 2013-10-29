@@ -1,0 +1,8 @@
+settings = {
+  "api_server": {
+    "host": "mario.blafaselblub.net",
+    "port": 4444,
+    "tls": true
+  },
+  "desktop_url": "https://mario.blafaselblub.net/?mobile_redirect=false"
+};

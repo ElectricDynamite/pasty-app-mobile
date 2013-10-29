@@ -3,6 +3,7 @@
     "title": "Pasty",
     "login": "Login",
     "logout": "Logout",
+    "desktop_site": "Desktop Site",
     "about": {
       "link": "About Pasty" }
   },

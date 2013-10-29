@@ -6,9 +6,10 @@
 <!--<link rel="stylesheet" href="css/pasty-app-mobile.min.css">
 <link rel="stylesheet" href="css/jquery.mobile.structure-1.3.2.min.css">-->
 <link rel="stylesheet" href="css/jquery.mobile-1.3.2.min.css">
+<script src="settings.json"></script>
 <script src="js/jquery-2.0.3.min.js"></script>
 <script src="js/jquery.mobile-1.3.2.min.js"></script>
-<script src="js/i18next-1.7.1.min.js"></script>    
+<script src="js/i18next-1.7.1.min.js"></script>
 <script src="js/pastyclient-browser.js"></script>
 <script src="js/pasty-app-mobile.js"></script>
 <script type="text/javascript">
@@ -50,9 +51,10 @@
   </ul>
 </div>
 <div data-role="footer">
-<h4><a class="i18n" id="about-link" href="http://www.pastyapp.org" data-i18n="global.about.link">About Pasty</a></h4>
+<h4><a class="i18n" id="linkDesktop" href="#" data-i18n="global.desktop_site">Desktop Site</a></h4>
+<h4><a class="i18n" id="linkAbout" href="http://www.pastyapp.org" data-i18n="global.about.link">About Pasty</a></h4>
 </div>
-<div data-role="popup" data-dismissible="false" data-overlay-theme="a" data-transition="pop" id="popupLogin" data-theme="a" class="ui-corner-all">
+<div data-role="popup" data-overlay-theme="a" data-transition="pop" id="popupLogin" data-theme="a" class="ui-corner-all">
   <form>
     <div style="padding:10px 20px;">
       <h3 class="i18n" data-i18n="login_view.title">Please sign in</h3>
@@ -91,13 +93,13 @@
 </div>
 <script type="text/javascript">
   $(":jqmData(role='page'):last").on("pageshow", function(event) {
-    
+    $("#linkDesktop").attr('href', settings.desktop_url);
     $("#popupLoginSubmit").click(function(event) {
       event.preventDefault();
       var username = $("#username").val();
       var password = $("#password").val();
-      client = pastyclient('mario.blafaselblub.net', 4444, {
-    'ssl': true,
+      client = pastyclient(settings.api_server.host, settings.api_server.port, {
+    'ssl': settings.api_server.tls,
     'username': username,
     'password': password });
       pastyApp.setPastyClient(client);
