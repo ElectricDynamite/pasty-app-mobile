@@ -46,7 +46,7 @@ var pastyApp = (function(){
     },
     restoreFromLocalStorage: function() {
        var restoredTarget = JSON.parse(localStorage.getItem('pastyApp_pastyClient_target'));
-       var loginSuccess =localStorage.getItem('pastyApp_loginSuccess');
+       var loginSuccess = localStorage.getItem('pastyApp_loginSuccess');
        loginSuccess = (loginSuccess == "true") ? true : false;
        if(restoredTarget !== null && loginSuccess == true) {
           this.client = new PastyClient(restoredTarget);
@@ -56,6 +56,7 @@ var pastyApp = (function(){
     login: function(lastWasBad) {
       if(lastWasBad) {
         $("#loginFailedMessage").text($.t('error.login_failed'));
+        $("#popupLogin").popup('open');
       }
       this.queueLoginPopupAction('open');
     },
@@ -69,7 +70,10 @@ var pastyApp = (function(){
         if(bool === true) {
           $("#headerLoginButton").attr('href', "javascript:pastyApp.logout()");
           $("#headerLoginButton").find('.ui-btn-text').text($.t('global.logout'));
-          $("#uiNotLoggedIn").fadeOut({ 'complete': function() { $("#uiClipboard").fadeIn(); } });
+          $("#uiNotLoggedIn").fadeOut({ 'complete': function() { 
+            $("#uiClipboard").fadeIn();
+            $("#loginFailedMessage").text("");
+          } });
         } else {
           $("#headerLoginButton").attr('href', "#popupLogin");
           $("#headerLoginButton").find('.ui-btn-text').text($.t('global.login'));
@@ -84,14 +88,13 @@ var pastyApp = (function(){
       }
     },
     queueLoginPopupAction: function(state) {
-      console.log("queueLoginPopupActione called to "+state+" the popup");
       if(state === "open" || state === "close") this.queuedLoginPopupAction = state;
     },
     runQueuedLoginPopupAction: function(toggleState) {
       if(toggleState === this.queuedLoginPopupAction) {
         $("#popupLogin").popup(this.queuedLoginPopupAction);
-        this.queuedLoginPopupAction = null;
       }
+      this.queuedLoginPopupAction = null;
     },
     getClipboard: function(callback) {
       callback = callback || $.noop;
@@ -187,7 +190,6 @@ var pastyApp = (function(){
           if(err.code !== "") this.displayErrorMessage(err.message);
           break;
       }
-      if(err.code !== "") this.displayErrorMessage(err.message);
     },
     displayErrorMessage: function(message) {
         $("#popupErrorMessage").text(message);
