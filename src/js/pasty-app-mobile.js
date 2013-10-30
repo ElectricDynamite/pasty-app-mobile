@@ -26,7 +26,7 @@ var pastyApp = (function(){
     useLocalStorage: true,
     client: null,
     loginSuccess: false,
-    loginPopupOpenState: false,
+    queuedLoginPopupAction: null,
     setPastyClient: function(client) {
       this.client = client;
       if(this.useLocalStorage) this.saveToLocalStorage();
@@ -57,11 +57,10 @@ var pastyApp = (function(){
       if(lastWasBad) {
         $("#loginFailedMessage").text($.t('error.login_failed'));
       }
-      $("#popupLogin").popup('open');
+      this.queueLoginPopupAction('open');
     },
     logout: function() {
       this.loggedIn(false);
-      
     },
     loggedIn: function(bool) {
       if(bool === undefined) return this.loginSuccess;
@@ -84,13 +83,14 @@ var pastyApp = (function(){
         this.saveToLocalStorage();
       }
     },
-    loginPopupOpen: function(bool) {
-      if(bool === undefined) return this.loginSuccess;
-      if(typeof(bool) == "boolean") {
-        this.popupLoginOpenState = bool;
-        if(bool === true) {
-        } else {
-        }
+    queueLoginPopupAction: function(state) {
+      console.log("queueLoginPopupActione called to "+state+" the popup");
+      if(state === "open" || state === "close") this.queuedLoginPopupAction = state;
+    },
+    runQueuedLoginPopupAction: function(toggleState) {
+      if(toggleState === this.queuedLoginPopupAction) {
+        $("#popupLogin").popup(this.queuedLoginPopupAction);
+        this.queuedLoginPopupAction = null;
       }
     },
     getClipboard: function(callback) {

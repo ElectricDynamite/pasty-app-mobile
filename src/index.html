@@ -24,8 +24,9 @@
          $("#headerLoginButton").find('.ui-btn-text').text($.t($("#headerLoginButton").attr('data-i18n')));
         $(".i18n-button").i18n().button('refresh');
 
+
         if(pastyApp.getPastyClient() === null || pastyApp.loggedIn() == false) {
-          $("#popupLogin").popup("open");
+          $("#loginPopup").popup('open');
         } else {
           pastyApp.getClipboard();
         }
@@ -60,6 +61,7 @@
 <div data-role="footer">
 <h4><a class="i18n" id="linkDesktop" href="#" data-i18n="global.desktop_site">Desktop Site</a></h4>
 <h4><a class="i18n" id="linkAbout" href="http://www.pastyapp.org" data-i18n="global.about.link">About Pasty</a></h4>
+<h5 id="versionString"></h5>
 </div>
 <div data-role="popup" data-overlay-theme="a" data-transition="pop" id="popupLogin" data-theme="a" class="ui-corner-all">
   <form>
@@ -101,6 +103,8 @@
 <script type="text/javascript">
   $(":jqmData(role='page'):last").on("pageshow", function(event) {
     $("#linkDesktop").attr('href', settings.desktop_url);
+    $("#versionString").text("Version "+pastyApp.version);
+
     $("#popupLoginSubmit").click(function(event) {
       event.preventDefault();
       var username = $("#username").val();
@@ -110,19 +114,19 @@
     'username': username,
     'password': password });
       pastyApp.setPastyClient(client);
-      $("#popupLogin").popup('close');
+      $("#loginPopup").popup('close');
       pastyApp.getClipboard();
     });
-    
+
     $("#popupLogin").bind({
       popupafteropen: function(event, ui) {
-        pastyApp.loginPopupOpen(true);
+        pastyApp.runQueuedLoginPopupAction('close');
       },
       popupafterclose: function(event, ui) {
-        pastyApp.loginPopupOpen(false);
+        pastyApp.runQueuedLoginPopupAction('open');
       }
     });
-  
+
     $("#popupAddItemSubmit").click(function(event) {
       event.preventDefault();
       pastyApp.addItem($("#newItem").val());
