@@ -72,6 +72,12 @@
       <label for="password" class="ui-hidden-accessible" data-i18n="login_view.password_label">Password:</label>
       <input type="password" name="password" id="password" value="" placeholder="password" data-i18n="[placeholder]login_view.password_label" data-theme="a" class="i18n">
       <span id="loginFailedMessage"></span>
+      <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup">
+          <input type="checkbox" name="loginUseLocalStorage" id="loginUseLocalStorage" class="custom" />
+          <label for="loginUseLocalStorage">Save login data</label>
+        </fieldset>
+      </div>
       <button class="i18n-button" id="popupLoginSubmit" type="submit" data-theme="b" data-i18n="login_view.submit_label">Sign in</button>
     </div>
   </form>
@@ -109,6 +115,7 @@
       event.preventDefault();
       var username = $("#username").val();
       var password = $("#password").val();
+      pastyApp.setUseLocalStorage($("#loginUseLocalStorage").is(":checked"));
       client = pastyclient(settings.api_server.host, settings.api_server.port, {
     'ssl': settings.api_server.tls,
     'username': username,

@@ -23,7 +23,7 @@ var pastyApp = (function(){
 
   return {
     version: '0.1.0',
-    useLocalStorage: true,
+    useLocalStorage: false,
     client: null,
     loginSuccess: false,
     queuedLoginPopupAction: null,
@@ -32,26 +32,35 @@ var pastyApp = (function(){
       if(this.useLocalStorage) this.saveToLocalStorage();
     },
     getPastyClient: function() {
-      if(this.client === null && this.useLocalStorage === true) {
+      if(this.client === null) {
         this.restoreFromLocalStorage();
       }
       return this.client;
     },
     saveToLocalStorage: function() {
-      if(this.useLocalStorage !== true) return;
+      if(this.useLocalStorage !== true) {
+        localStorage.clear();
+        return;
+      }
       if(this.client !== null) {
         localStorage.setItem('pastyApp_pastyClient_target', JSON.stringify(this.client.target));
         localStorage.setItem('pastyApp_loginSuccess', this.loginSuccess);
       }
     },
     restoreFromLocalStorage: function() {
-       var restoredTarget = JSON.parse(localStorage.getItem('pastyApp_pastyClient_target'));
-       var loginSuccess = localStorage.getItem('pastyApp_loginSuccess');
-       loginSuccess = (loginSuccess == "true") ? true : false;
-       if(restoredTarget !== null && loginSuccess == true) {
-          this.client = new PastyClient(restoredTarget);
-          this.loggedIn(loginSuccess);
-       }
+      var restoredTarget = JSON.parse(localStorage.getItem('pastyApp_pastyClient_target'));
+      var loginSuccess = localStorage.getItem('pastyApp_loginSuccess');
+      loginSuccess = (loginSuccess == "true") ? true : false;
+      if(restoredTarget !== null && loginSuccess == true) {
+        this.client = new PastyClient(restoredTarget);
+        this.loggedIn(loginSuccess);
+        this.useLocalStorage = true;
+      }
+    },
+    setUseLocalStorage: function(bool) {
+      if(typeof(bool) == "boolean") {
+        this.useLocalStorage = bool;
+      }
     },
     login: function(lastWasBad) {
       if(lastWasBad) {
