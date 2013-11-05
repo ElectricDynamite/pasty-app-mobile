@@ -71,6 +71,8 @@ var pastyApp = (function(){
     },
     logout: function() {
       this.loggedIn(false);
+      $("#username").val("");
+      localStorage.clear();
     },
     loggedIn: function(bool) {
       if(bool === undefined) return this.loginSuccess;
@@ -89,7 +91,6 @@ var pastyApp = (function(){
           $("#uiClipboard").fadeOut({ 'complete': function() { 
             $("#uiNotLoggedIn").fadeIn(); 
             $("#clipboard").empty();
-            $("#username").val("");
             $("#password").val("");
           }});
         }
@@ -192,7 +193,7 @@ var pastyApp = (function(){
       err.message = err.message || "";
       switch(err.code) {
         case "UnauthorizedError":
-          this.logout();
+          this.loggedIn(false);
           this.login(true);
           break;
         default:
