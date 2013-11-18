@@ -187,7 +187,7 @@ var pastyApp = (function(){
       }
     },
     errorHandler: function(err) {
-      if(err === null) return; // if no error is provided, return
+      if(err === null || err === undefined) return; // if no error is provided, return
       err.statusCode = err.statusCode || 500;
       err.code = err.code || "";
       err.message = err.message || "";
