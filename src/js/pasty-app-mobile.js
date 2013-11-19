@@ -202,8 +202,20 @@ var pastyApp = (function(){
       }
     },
     displayErrorMessage: function(message) {
-        $("#popupErrorMessage").text(message);
-        $("#popupError").popup('open');
+      $("#popupErrorMessage").text(message);
+      
+      var popupLoop = function() {
+        if ($(".ui-page-active .ui-popup-active").length > 0) {
+          // a popup is still open, wait
+          setTimeout(popupLoop(), 200);
+        } else {
+          $("#popupError").popup('open');
+        }
+      };
+      setTimeout(function() { popupLoop(); }, 500);
+      // This timeout increases the chance that the popup will be opened
+      // on Webkit based browsers, some kind of race condition seems to 
+      // be going on.
     }
   };
 }());
